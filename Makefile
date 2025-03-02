@@ -31,27 +31,6 @@ ifneq ($(wildcard $(MOONCAKE_DIR)/.git),)
 
 include $(APPDIR)/Application.mk
 
-SUOBJS :=
-ifneq ($(EXTRA),)
-$(eval $(call SPLITVARIABLE,OBJS_SPILT,$(SORTOBJS),100))
-$(foreach BATCH, $(OBJS_SPILT_TOTAL), \
-	$(foreach obj, $(OBJS_SPILT_$(BATCH)), \
-		$(foreach EXT, $(EXTRA), \
-			$(eval substitute := $(patsubst %$(SUFFIX)$(OBJEXT),%$(SUFFIX)$(EXT),$(obj))) \
-			$(eval SUOBJS += $(substitute)) \
-		) \
-	) \
-)
-endif
-
-clean::
-	$(eval $(call SPLITVARIABLE,SUOBJS_SPILT,$(SUOBJS),100))
-	$(foreach BATCH, $(SUOBJS_SPILT_TOTAL), \
-		$(foreach obj, $(SUOBJS_SPILT_$(BATCH)), \
-			$(shell rm -rf $(obj)) \
-		) \
-	)
-
-distclean::
+include $(APPDIR)/tools/MultiDirectoryObj.mk
 
 endif
